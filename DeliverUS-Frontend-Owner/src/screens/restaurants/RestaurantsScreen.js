@@ -26,6 +26,13 @@ export default function RestaurantsScreen ({ navigation, route }) {
     }
   }, [loggedInUser, route])
 
+  const daysLeft = (date) => {
+    const hoy = new Date()
+    const fecha = new Date(date)
+    const diferencia = fecha.getTime() - hoy.getTime()
+    return Math.floor(diferencia / (1000 * 60 * 60 * 24)) <= 7
+  }
+
   const renderRestaurant = ({ item }) => {
     return (
       <ImageCard
@@ -40,6 +47,11 @@ export default function RestaurantsScreen ({ navigation, route }) {
           <TextSemiBold>Avg. service time: <TextSemiBold textStyle={{ color: GlobalStyles.brandPrimary }}>{item.averageServiceMinutes} min.</TextSemiBold></TextSemiBold>
         }
         <TextSemiBold>Shipping: <TextSemiBold textStyle={{ color: GlobalStyles.brandPrimary }}>{item.shippingCosts.toFixed(2)}€</TextSemiBold></TextSemiBold>
+        {/* SOLUCION */}
+        {item.visibleUntil && daysLeft(item.visibleUntil) &&
+          <TextRegular textStyle={styles.visible}>Is about to disappear in {daysLeft(item.visibleUntil)} days!</TextRegular>
+        }
+        {/* SOLUCION */}
         <View style={styles.actionButtonsContainer}>
           <Pressable
             onPress={() => navigation.navigate('EditRestaurantScreen', { id: item.id })

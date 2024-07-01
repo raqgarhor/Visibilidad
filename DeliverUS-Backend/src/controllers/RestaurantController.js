@@ -1,4 +1,5 @@
 import { Restaurant, Product, RestaurantCategory, ProductCategory } from '../models/models.js'
+import Sequelize from 'sequelize'
 
 const index = async function (req, res) {
   try {
@@ -55,6 +56,10 @@ const show = async function (req, res) {
       include: [{
         model: Product,
         as: 'products',
+        // SOLUCION
+        where: {
+          visibleUntil: { [Sequelize.Op.or]: [{ [Sequelize.Op.eq]: null }, { [Sequelize.Op.gt]: new Date() }] }
+        },
         include: { model: ProductCategory, as: 'productCategory' }
       },
       {
